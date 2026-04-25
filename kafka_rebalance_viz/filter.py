@@ -51,3 +51,24 @@ def filter_events(
     """Return a new :class:`ParseResult` containing only matching events."""
     filtered = [e for e in result.events if _matches(e, criteria)]
     return ParseResult(events=filtered, errors=result.errors)
+
+
+def filter_by_time_range(
+    result: ParseResult,
+    since: Optional[datetime] = None,
+    until: Optional[datetime] = None,
+) -> ParseResult:
+    """Convenience wrapper to filter events by time range only.
+
+    Args:
+        result: The :class:`ParseResult` to filter.
+        since: Exclude events with a timestamp before this value.
+        until: Exclude events with a timestamp after this value.
+
+    Returns:
+        A new :class:`ParseResult` containing only events within the
+        specified time range.  Events without a timestamp are excluded
+        when either bound is provided.
+    """
+    criteria = FilterCriteria(since=since, until=until)
+    return filter_events(result, criteria)
